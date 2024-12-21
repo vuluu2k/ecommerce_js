@@ -8,5 +8,5 @@ const server = app.listen(PORT, () => {
 
 process.on("SIGINT", () => {
   server.close(() => console.log("Exit server express"));
-  // Handle server crash
+  // Handle server crash push message to channel chat development
 });
