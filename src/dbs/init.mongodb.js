@@ -2,9 +2,11 @@
 
 const mongoose = require("mongoose");
 const { countConnect } = require("../helpers/check.connect");
+const {
+  db: { host, port, name },
+} = require("../configs/config.mongodb");
 
-const connectString =
-  process.env.MONGODB_URL || "mongodb://127.0.0.1:27017/ecommerce`";
+const connectString = `mongodb://${host}:${port}/${name}`;
 
 const isDev = process.env.NODE_ENV === "development";
 
