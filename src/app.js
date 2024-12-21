@@ -3,7 +3,7 @@ const express = require("express");
 const morgan = require("morgan");
 const helmet = require("helmet");
 const compression = require("compression");
-const { checkOverloadConnect } = require("./helpers/check.connect");
+// const { checkOverloadConnect } = require("./helpers/check.connect");
 
 const app = express();
 
@@ -14,13 +14,9 @@ app.use(compression());
 
 // init database
 require("./dbs/init.mongodb");
-checkOverloadConnect();
+// checkOverloadConnect();
 
 // init router
-app.get("/", (req, res) => {
-  res.json({
-    message: "Hello world",
-  });
-});
+app.use("", require("./routes"));
 
 module.exports = app;
