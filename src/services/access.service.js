@@ -42,10 +42,9 @@ class AccessService {
         //   },
         // });
 
-        const privateKey = crypto.getRandomValues(64).toString("hex");
-        const publicKey = crypto.getRandomValues(64).toString("hex");
+        const privateKey = crypto.randomBytes(64).toString("hex");
+        const publicKey = crypto.randomBytes(64).toString("hex");
 
-        // console.log({ privateKey, publicKey }); // save collection key store
         const keyStore = await KeyTokenService.createKeyToken({
           userId: newShop._id,
           publicKey,
@@ -59,13 +58,9 @@ class AccessService {
           };
         }
 
-        // const publicKeyObject = crypto.createPublicKey(publicKeyString);
-
-        // console.log("publicKeyObject", publicKeyObject);
-
         const tokens = await createTokenPair(
           { userId: newShop._id, email: newShop.email },
-          publicKeyString,
+          publicKey,
           privateKey
         );
 
@@ -86,7 +81,11 @@ class AccessService {
         metadata: null,
       };
     } catch (error) {
-      return error;
+      return {
+        code: 500,
+        message: error.message,
+        status: "error",
+      };
     }
   };
 }
