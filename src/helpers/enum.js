@@ -5,4 +5,16 @@ const RoleShop = Object.freeze({
   ADMIN: "00003",
 });
 
-module.exports = { RoleShop };
+const StatusCode = Object.freeze({
+  FORBIDDEN: 403,
+  CONFLICT: 409,
+  BAD_REQUEST: 400,
+});
+
+const ReasonStatusCode = Object.freeze({
+  FORBIDDEN: "Forbidden error",
+  CONFLICT: "Conflict error",
+  BAD_REQUEST: "Bad request",
+});
+
+module.exports = { RoleShop, StatusCode, ReasonStatusCode };
