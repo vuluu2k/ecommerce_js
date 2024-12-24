@@ -30,6 +30,7 @@ app.use("", require("./routes"));
 // });
 
 app.use((error, req, res, next) => {
+  console.log("[ERROR]::", error);
   const statusCode = error.status || 500;
 
   return res.status(statusCode).json({

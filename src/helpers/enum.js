@@ -6,12 +6,16 @@ const RoleShop = Object.freeze({
 });
 
 const StatusCode = Object.freeze({
+  SUCCESS: 200,
+  CREATED: 201,
   FORBIDDEN: 403,
   CONFLICT: 409,
   BAD_REQUEST: 400,
 });
 
 const ReasonStatusCode = Object.freeze({
+  SUCCESS: "Success",
+  CREATED: "Created",
   FORBIDDEN: "Forbidden error",
   CONFLICT: "Conflict error",
   BAD_REQUEST: "Bad request",
