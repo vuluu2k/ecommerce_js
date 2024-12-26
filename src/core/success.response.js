@@ -5,8 +5,8 @@ const { StatusCode, ReasonStatusCode } = require("../helpers/enum");
 class SuccessResponse {
   constructor({
     message,
-    statusCode = StatusCode.SUCCESS,
-    reasonStatusCode = ReasonStatusCode.SUCCESS,
+    statusCode = StatusCode.OK,
+    reasonStatusCode = ReasonStatusCode.OK,
     metadata = {},
   }) {
     this.message = message ?? reasonStatusCode;
@@ -19,7 +19,7 @@ class SuccessResponse {
   }
 }
 
-class SUCCESS extends SuccessResponse {
+class OK extends SuccessResponse {
   constructor({ message, metadata = {} }) {
     super({ message, metadata });
   }
@@ -36,4 +36,4 @@ class CREATED extends SuccessResponse {
   }
 }
 
-module.exports = { SUCCESS, CREATED };
+module.exports = { OK, CREATED };

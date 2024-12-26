@@ -2,13 +2,59 @@
 const bcrypt = require("bcrypt");
 const shopModel = require("../models/shop.model");
 const { RoleShop } = require("../helpers/enum");
-const crypto = require("crypto");
+const crypto = require("node:crypto");
 const KeyTokenService = require("./keytoken.service");
 const { createTokenPair } = require("../auth/authUtils");
 const { getInfoData } = require("../utils");
-const { BadRequestError } = require("../core/error.response");
+const { BadRequestError, AuthFailureError } = require("../core/error.response");
+const { findByEmail } = require("./shop.service");
 
 class AccessService {
+  static logout = async (keyStore) => {
+    const delKey = KeyTokenService.removeKeyById(keyStore._id);
+
+    return delKey;
+  };
+
+  static login = async ({ email, password, refreshToken = null }) => {
+    const foundShop = await findByEmail({ email });
+
+    if (!foundShop) {
+      throw new BadRequestError("Shop not registered!");
+    }
+
+    const passwordMatch = await bcrypt.compare(password, foundShop.password);
+    if (!passwordMatch) {
+      throw new AuthFailureError("Authentication failed!");
+    }
+
+    const privateKey = crypto.randomBytes(64).toString("hex");
+    const publicKey = crypto.randomBytes(64).toString("hex");
+
+    const { _id: userId } = foundShop;
+
+    const tokens = await createTokenPair(
+      { userId: userId, email: foundShop.email },
+      publicKey,
+      privateKey
+    );
+
+    await KeyTokenService.createKeyToken({
+      userId,
+      publicKey,
+      privateKey,
+      refreshToken: tokens.refreshToken,
+    });
+
+    return {
+      shop: getInfoData({
+        fields: ["_id", "name", "email"],
+        object: foundShop,
+      }),
+      tokens,
+    };
+  };
+
   static signUp = async ({ name, email, password }) => {
     const shopExisted = await shopModel.exists({ email }).lean();
 
@@ -26,19 +72,6 @@ class AccessService {
     });
 
     if (newShop) {
-      // create private key, public key
-      // const { privateKey, publicKey } = crypto.generateKeyPairSync("rsa", {
-      //   modulusLength: 4096,
-      //   publicKeyEncoding: {
-      //     type: "pkcs1", // Public key crypto standards 1
-      //     format: "pem",
-      //   },
-      //   privateKeyEncoding: {
-      //     type: "pkcs1", // Private key crypto standards 1
-      //     format: "pem",
-      //   },
-      // });
-
       const privateKey = crypto.randomBytes(64).toString("hex");
       const publicKey = crypto.randomBytes(64).toString("hex");
 
