@@ -4,12 +4,27 @@ const shopModel = require("../models/shop.model");
 const { RoleShop } = require("../helpers/enum");
 const crypto = require("node:crypto");
 const KeyTokenService = require("./keytoken.service");
-const { createTokenPair } = require("../auth/authUtils");
+const { createTokenPair, verifyJWT } = require("../auth/authUtils");
 const { getInfoData } = require("../utils");
 const { BadRequestError, AuthFailureError } = require("../core/error.response");
 const { findByEmail } = require("./shop.service");
 
 class AccessService {
+  static handlerRefreshToken = async (refreshToken) => {
+    const foundToken = await KeyTokenService.findByRefreshTokenUsed(
+      refreshToken
+    );
+
+    if (foundToken) {
+      const { userId, email } = await verifyJWT(
+        refreshToken,
+        foundToken.privateKey
+      );
+
+      console.log("foundToken", { userId, email });
+    }
+  };
+
   static logout = async (keyStore) => {
     const delKey = KeyTokenService.removeKeyById(keyStore._id);
 
