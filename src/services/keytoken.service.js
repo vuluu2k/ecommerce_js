@@ -1,5 +1,6 @@
 "use strict";
 
+const { Types } = require("mongoose");
 const keytokenModel = require("../models/keytoken.model");
 
 class KeyTokenService {
@@ -35,22 +36,32 @@ class KeyTokenService {
   };
 
   static findByUserId = async (userId) => {
-    return await keytokenModel.findOne({ user: userId }).lean();
+    return await keytokenModel
+      .findOne({ user: new Types.ObjectId(userId) })
+      .lean();
   };
 
   static removeKeyById = async (id) => {
     return await keytokenModel.deleteOne({ _id: id }, { new: true });
   };
 
-  static findByRefreshTokenUsed = async (refreshToken) => {
-    // mongoose auto check refreshToken in refreshToken used same as refreshToken in array refreshTokenUsed
-    return await keytokenModel.findOne({
-      refreshTokensUsed: refreshToken,
-    });
+  static findByRefreshToken = async (refreshToken) => {
+    return await keytokenModel.findOne({ refreshToken });
   };
 
-  static deleteById(id) {
-    return keytokenModel.deleteOne({ _id: id });
+  static findByRefreshTokenUsed = async (refreshToken) => {
+    // mongoose auto check refreshToken in refreshToken used same as refreshToken in array refreshTokenUsed
+    return await keytokenModel
+      .findOne({
+        refreshTokensUsed: refreshToken,
+      })
+      .lean();
+  };
+
+  static deleteKeyById(userId) {
+    return keytokenModel.findOneAndDelete({
+      user: new Types.ObjectId(userId),
+    });
   }
 }
 

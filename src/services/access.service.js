@@ -6,7 +6,11 @@ const crypto = require("node:crypto");
 const KeyTokenService = require("./keytoken.service");
 const { createTokenPair, verifyJWT } = require("../auth/authUtils");
 const { getInfoData } = require("../utils");
-const { BadRequestError, AuthFailureError } = require("../core/error.response");
+const {
+  BadRequestError,
+  AuthFailureError,
+  ForbiddenError,
+} = require("../core/error.response");
 const { findByEmail } = require("./shop.service");
 
 class AccessService {
@@ -22,7 +26,43 @@ class AccessService {
       );
 
       console.log("foundToken", { userId, email });
+      // phát hiện token tái sử dụng, nghi vấn hack kích toàn bộ tài khoản đăng nhập lại
+      await KeyTokenService.deleteKeyById(userId);
+      throw new ForbiddenError("Something went wrong!!");
     }
+
+    const holderToken = await KeyTokenService.findByRefreshToken(refreshToken);
+
+    if (!holderToken) throw new AuthFailureError("Shop not registered!");
+
+    const { userId, email } = await verifyJWT(
+      refreshToken,
+      holderToken.privateKey
+    );
+
+    const foundShop = await findByEmail({ email });
+
+    if (!foundShop) throw new AuthFailureError("Shop not registered!");
+
+    const tokens = await createTokenPair(
+      { userId, email },
+      holderToken.publicKey,
+      holderToken.privateKey
+    );
+
+    await holderToken.updateOne({
+      $set: {
+        refreshToken: tokens.refreshToken,
+      },
+      $addToSet: {
+        refreshTokensUsed: refreshToken,
+      },
+    });
+
+    return {
+      user: { userId, email },
+      tokens,
+    };
   };
 
   static logout = async (keyStore) => {
