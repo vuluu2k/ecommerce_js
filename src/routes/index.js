@@ -9,6 +9,9 @@ router.use(apiKey);
 // check permission
 router.use(permission("0000"));
 
-router.use("/v1/api", require("./access"));
+const prefix = "/v1/api";
+
+router.use(`${prefix}`, require("./access"));
+router.use(`${prefix}/product`, require("./product"));
 
 module.exports = router;
