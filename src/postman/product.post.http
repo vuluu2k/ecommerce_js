@@ -5,7 +5,7 @@ POST {{url_dev}}/product
 Content-Type: application/json
 x-api-key: ede28364db509cce622633ef58998cf53c6641b957391f1aeab6da9c28ce2933b229806b9c19b01c093080e7c8ac6bef43fc6f997a83e10c573d60f47b543cc5
 x-client-id: 676ae0faaa7dce0980af444f
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NzZhZTBmYWFhN2RjZTA5ODBhZjQ0NGYiLCJlbWFpbCI6InRlc3QxMjIyMjIyZHNhZDIiLCJpYXQiOjE3MzYzNTI2NDgsImV4cCI6MTczNjUyNTQ0OH0.peVOqwxP-rIMEzFLheQaaTWicA6_3KSIFMC55N1wPbA
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NzZhZTBmYWFhN2RjZTA5ODBhZjQ0NGYiLCJlbWFpbCI6InRlc3QxMjIyMjIyZHNhZDIiLCJpYXQiOjE3MzY1MjA2NjgsImV4cCI6MTczNjY5MzQ2OH0.avhWf81iOlD6Ns14xWylRtDTSxgjcvbvdkVDzZ2K-Fk
 
 {
   "product_name": "Test",
@@ -15,11 +15,9 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NzZhZ
   "product_type": "Clothing",
   "product_thumb": "product_thumb",
   "product_quantity": 10,
-  "product_attributes": [
-    {
+  "product_attributes": {
       "brand": "Levis",
       "size": "L",
       "material": "Cotton"
-    }
-  ]
+  }
 }
