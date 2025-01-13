@@ -25,7 +25,7 @@ const keyTokenSchema = new Schema(
     },
     refreshTokensUsed: {
       type: Array,
-      required: [],
+      default: [],
     },
   },
   {

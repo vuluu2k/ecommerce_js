@@ -14,31 +14,19 @@ const {
 const { findByEmail } = require("./shop.service");
 
 class AccessService {
-  static handlerRefreshToken = async (refreshToken) => {
-    const foundToken = await KeyTokenService.findByRefreshTokenUsed(
-      refreshToken
-    );
+  static handlerRefreshToken = async ({ keyStore, user, refreshToken }) => {
+    const { userId, email } = user;
 
-    if (foundToken) {
-      const { userId, email } = await verifyJWT(
-        refreshToken,
-        foundToken.privateKey
-      );
-
-      console.log("foundToken", { userId, email });
-      // phát hiện token tái sử dụng, nghi vấn hack kích toàn bộ tài khoản đăng nhập lại
+    if (keyStore.refreshTokensUsed.includes(refreshToken)) {
       await KeyTokenService.deleteKeyById(userId);
-      throw new ForbiddenError("Something went wrong!!");
+      throw new ForbiddenError(
+        "Something went wrong happen, Please Login again!!"
+      );
     }
 
-    const holderToken = await KeyTokenService.findByRefreshToken(refreshToken);
-
-    if (!holderToken) throw new AuthFailureError("Shop not registered!");
-
-    const { userId, email } = await verifyJWT(
-      refreshToken,
-      holderToken.privateKey
-    );
+    if (keyStore.refreshToken != refreshToken) {
+      throw new AuthFailureError("Shop not registered!");
+    }
 
     const foundShop = await findByEmail({ email });
 
@@ -46,11 +34,12 @@ class AccessService {
 
     const tokens = await createTokenPair(
       { userId, email },
-      holderToken.publicKey,
-      holderToken.privateKey
+      keyStore.publicKey,
+      keyStore.privateKey
     );
+    console.log(keyStore);
 
-    await holderToken.updateOne({
+    await keyStore.updateOne({
       $set: {
         refreshToken: tokens.refreshToken,
       },
@@ -63,6 +52,56 @@ class AccessService {
       user: { userId, email },
       tokens,
     };
+
+    // version 1 error protected
+    // const foundToken = await KeyTokenService.findByRefreshTokenUsed(
+    //   refreshToken
+    // );
+
+    // if (foundToken) {
+    //   const { userId, email } = await verifyJWT(
+    //     refreshToken,
+    //     foundToken.privateKey
+    //   );
+
+    //   console.log("foundToken", { userId, email });
+    //   // phát hiện token tái sử dụng, nghi vấn hack kích toàn bộ tài khoản đăng nhập lại
+    //   await KeyTokenService.deleteKeyById(userId);
+    //   throw new ForbiddenError("Something went wrong!!");
+    // }
+
+    // const holderToken = await KeyTokenService.findByRefreshToken(refreshToken);
+
+    // if (!holderToken) throw new AuthFailureError("Shop not registered!");
+
+    // const { userId, email } = await verifyJWT(
+    //   refreshToken,
+    //   holderToken.privateKey
+    // );
+
+    // const foundShop = await findByEmail({ email });
+
+    // if (!foundShop) throw new AuthFailureError("Shop not registered!");
+
+    // const tokens = await createTokenPair(
+    //   { userId, email },
+    //   holderToken.publicKey,
+    //   holderToken.privateKey
+    // );
+
+    // await holderToken.updateOne({
+    //   $set: {
+    //     refreshToken: tokens.refreshToken,
+    //   },
+    //   $addToSet: {
+    //     refreshTokensUsed: refreshToken,
+    //   },
+    // });
+
+    // return {
+    //   user: { userId, email },
+    //   tokens,
+    // };
   };
 
   static logout = async (keyStore) => {
