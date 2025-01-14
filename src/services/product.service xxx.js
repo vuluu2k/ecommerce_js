@@ -9,18 +9,29 @@ const {
 const { BadRequestError } = require("../core/error.response");
 
 class ProductFactory {
+  static productRegistry = {};
+
+  static registerProductType(type, classRef) {
+    this.productRegistry[type] = classRef;
+  }
+
   static async createProduct(type, payload) {
-    console.log(type, payload);
-    switch (type) {
-      case "Electronics":
-        return new Electronic(payload).createProduct();
-      case "Clothing":
-        return new Clothing(payload).createProduct();
-      case "Furniture":
-        return new Furniture(payload).createProduct();
-      default:
-        throw new BadRequestError("Invalid Product Type");
-    }
+    const productClass = this.productRegistry[type];
+
+    if (!productClass) throw new BadRequestError("Invalid Product Type");
+
+    return new productClass(payload).createProduct();
+
+    // switch (type) {
+    //   case "Electronics":
+    //     return new Electronic(payload).createProduct();
+    //   case "Clothing":
+    //     return new Clothing(payload).createProduct();
+    //   case "Furniture":
+    //     return new Furniture(payload).createProduct();
+    //   default:
+    //     throw new BadRequestError("Invalid Product Type");
+    // }
   }
 }
 
@@ -100,5 +111,9 @@ class Furniture extends Product {
     return newProduct;
   }
 }
+
+ProductFactory.registerProductType("Clothing", Clothing);
+ProductFactory.registerProductType("Electronic", Electronic);
+ProductFactory.registerProductType("Furniture", Furniture);
 
 module.exports = ProductFactory;
