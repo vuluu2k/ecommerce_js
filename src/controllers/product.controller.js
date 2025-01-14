@@ -1,7 +1,7 @@
 "use strict";
 
 const { OK } = require("../core/success.response");
-const ProductFactory = require("../services/product.service");
+const ProductFactory = require("../services/product.service.xxx");
 
 class ProductController {
   createProduct = async (req, res, next) => {
