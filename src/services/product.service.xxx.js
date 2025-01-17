@@ -7,6 +7,7 @@ const {
   furniture,
 } = require("../models/product.model");
 const { BadRequestError } = require("../core/error.response");
+const { findAllDraftsForShop } = require("../models/repositories/product.repo");
 
 class ProductFactory {
   static productRegistry = {};
@@ -21,17 +22,6 @@ class ProductFactory {
     if (!productClass) throw new BadRequestError("Invalid Product Type");
 
     return new productClass(payload).createProduct();
-
-    // switch (type) {
-    //   case "Electronics":
-    //     return new Electronic(payload).createProduct();
-    //   case "Clothing":
-    //     return new Clothing(payload).createProduct();
-    //   case "Furniture":
-    //     return new Furniture(payload).createProduct();
-    //   default:
-    //     throw new BadRequestError("Invalid Product Type");
-    // }
   }
 }
 
@@ -58,6 +48,12 @@ class Product {
 
   async createProduct(product_id) {
     return await product.create({ ...this, _id: product_id });
+  }
+
+  static async findAllDraftsForShop({ product_shop, limit = 50, skip = 0 }) {
+    const query = { product_shop, is_draft: true };
+
+    return await findAllDraftsForShop({ query, limit, skip });
   }
 }
 

@@ -7,4 +7,6 @@ const productController = require("../../controllers/product.controller");
 router.use(authentication);
 router.post("", asyncHandler(productController.createProduct));
 
+router.get("/drafts/all", asyncHandler(productController.getAllDraftsForShop));
+
 module.exports = router;

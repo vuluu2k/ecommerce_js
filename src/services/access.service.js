@@ -37,9 +37,8 @@ class AccessService {
       keyStore.publicKey,
       keyStore.privateKey
     );
-    console.log(keyStore);
 
-    await keyStore.updateOne({
+    await keyStore({
       $set: {
         refreshToken: tokens.refreshToken,
       },
