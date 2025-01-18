@@ -22,7 +22,6 @@ const productSchema = new Schema(
     },
     product_slug: {
       type: String,
-      required: true,
       unique: true,
     },
     product_price: {

@@ -14,10 +14,31 @@ class ProductController {
     }).send(res);
   };
 
+  /**
+   * @desc Get all drafts for shop
+   * @param {Number} limit
+   * @param {Number} skip
+   * @return {JSON}
+   */
   getAllDraftsForShop = async (req, res, next) => {
     new OK({
       message: "Get all drafts successfully",
-      metadata: await ProductFactory.getAllDraftsForShop({
+      metadata: await ProductFactory.findAllDraftsForShop({
+        product_shop: req.user.userId,
+      }),
+    }).send(res);
+  };
+
+  /**
+   * @desc Get all published for shop
+   * @param {Number} limit
+   * @param {Number} skip
+   * @return {JSON}
+   */
+  getAllPublishedForShop = async (req, res, next) => {
+    new OK({
+      message: "Get all published successfully",
+      metadata: await ProductFactory.findAllPublishedForShop({
         product_shop: req.user.userId,
       }),
     }).send(res);

@@ -6,7 +6,13 @@ const productController = require("../../controllers/product.controller");
 
 router.use(authentication);
 router.post("", asyncHandler(productController.createProduct));
+router.post("/publish/:product_id");
 
 router.get("/drafts/all", asyncHandler(productController.getAllDraftsForShop));
+
+router.get(
+  "/published/all",
+  asyncHandler(productController.getAllPublishedForShop)
+);
 
 module.exports = router;
