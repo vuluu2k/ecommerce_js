@@ -31,6 +31,20 @@ const publishProductByShop = async ({ product_shop, product_id }) => {
   return await foundProduct.save();
 };
 
+const unPushProductByShop = async ({ product_shop, product_id }) => {
+  const foundProduct = await product.findOne({
+    _id: new Types.ObjectId(product_id),
+    product_shop: new Types.ObjectId(product_shop),
+  });
+
+  if (!foundProduct) return null;
+
+  foundProduct.is_draft = true;
+  foundProduct.is_published = false;
+
+  return await foundProduct.save();
+};
+
 const queryProduct = async ({ query, limit, skip }) => {
   return await product
     .find(query)
@@ -47,4 +61,5 @@ module.exports = {
   publishProductByShop,
   queryProduct,
   findAllPublishedForShop,
+  unPushProductByShop,
 };

@@ -29,6 +29,26 @@ class ProductController {
     }).send(res);
   };
 
+  publishProductByShop = async (req, res, next) => {
+    new OK({
+      message: "Publish product successfully",
+      metadata: await ProductFactory.publishProductByShop({
+        product_id: req.params.product_id,
+        product_shop: req.user.userId,
+      }),
+    }).send(res);
+  };
+
+  unPublishProductByShop = async (req, res, next) => {
+    new OK({
+      message: "Unpublish product successfully",
+      metadata: await ProductFactory.unPushProductByShop({
+        product_id: req.params.product_id,
+        product_shop: req.user.userId,
+      }),
+    }).send(res);
+  };
+
   /**
    * @desc Get all published for shop
    * @param {Number} limit

@@ -11,6 +11,8 @@ const {
   findAllDraftsForShop,
   publishProductByShop,
   findAllPublishedForShop,
+  unPushProductByShop,
+  queryProduct,
 } = require("../models/repositories/product.repo");
 
 class ProductFactory {
@@ -30,6 +32,16 @@ class ProductFactory {
 
   static async publishProductByShop({ product_shop, product_id }) {
     return await publishProductByShop({ product_shop, product_id });
+  }
+
+  static async unPushProductByShop({ product_shop, product_id }) {
+    return await unPushProductByShop({ product_shop, product_id });
+  }
+
+  static async searchProductByUser({ term, limit, skip }) {
+    const regexTerm = new RegExp(term, "i");
+
+    return await queryProduct({ query, limit, skip });
   }
 
   static async findAllDraftsForShop({ product_shop, limit = 50, skip = 0 }) {

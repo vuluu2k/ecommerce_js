@@ -25,8 +25,31 @@ Authorization: Bearer {{token}}
   }
 }
 
+### publish product by shop
+@product_id=678b55af4ae015e523b8bede
+POST {{url_dev}}/product/publish/{{product_id}}
+Content-Type: application/json
+x-api-key: {{api_key}}
+x-client-id: {{client_id}}
+Authorization: Bearer {{token}}
+
+### unpublish product by shop
+@product_id=678b55af4ae015e523b8bede
+POST {{url_dev}}/product/unpublish/{{product_id}}
+Content-Type: application/json
+x-api-key: {{api_key}}
+x-client-id: {{client_id}}
+Authorization: Bearer {{token}}
+
 ### Get drafts for product
 GET {{url_dev}}/product/drafts/all
+Content-Type: application/json
+x-api-key: {{api_key}}
+x-client-id: {{client_id}}
+Authorization: Bearer {{token}}
+
+### Get published for product
+GET {{url_dev}}/product/published/all
 Content-Type: application/json
 x-api-key: {{api_key}}
 x-client-id: {{client_id}}
