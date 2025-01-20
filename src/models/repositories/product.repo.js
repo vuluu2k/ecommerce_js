@@ -1,5 +1,6 @@
 "use strict";
 
+const { getSelectData } = require("../../utils");
 const {
   product,
   electronic,
@@ -56,10 +57,49 @@ const queryProduct = async ({ query, limit, skip }) => {
     .exec();
 };
 
+const searchProductByUser = ({ term }) => {
+  const regexTerm = new RegExp(term);
+
+  const results = product
+    .find(
+      {
+        is_published: true,
+        $text: { $search: regexTerm },
+      },
+      {
+        score: { $meta: "textScore" },
+      }
+    )
+    .sort({ score: { $meta: "textScore" } })
+    .lean()
+    .exec();
+
+  return results;
+};
+
+const findAllProduct = async ({ limit, sort, page, filter, select }) => {
+  const skip = (page - 1) * limit;
+  const sortBy = sort === "ctime" ? { createdAt: -1 } : { updatedAt: -1 };
+
+  const products = await product
+    .find(filter)
+    .populate("product_shop", "name email -_id")
+    .sort(sortBy)
+    .skip(skip)
+    .limit(limit)
+    .select(getSelectData(select))
+    .lean()
+    .exec();
+
+  return products;
+};
+
 module.exports = {
   findAllDraftsForShop,
   publishProductByShop,
   queryProduct,
   findAllPublishedForShop,
   unPushProductByShop,
+  searchProductByUser,
+  findAllProduct,
 };

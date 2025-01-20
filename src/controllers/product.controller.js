@@ -63,6 +63,13 @@ class ProductController {
       }),
     }).send(res);
   };
+
+  getListSearchProduct = async (req, res, next) => {
+    new OK({
+      message: "Get list search successfully",
+      metadata: await ProductFactory.searchProductByUser(req.params),
+    }).send(res);
+  };
 }
 
 module.exports = new ProductController();

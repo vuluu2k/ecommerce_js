@@ -4,6 +4,11 @@ const { authentication } = require("../../auth/checkAuth");
 const { asyncHandler } = require("../../middlewares/error.handle");
 const productController = require("../../controllers/product.controller");
 
+router.get(
+  "/search/:term",
+  asyncHandler(productController.getListSearchProduct)
+);
+
 router.use(authentication);
 router.post("", asyncHandler(productController.createProduct));
 router.post(

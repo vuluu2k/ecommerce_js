@@ -54,3 +54,8 @@ Content-Type: application/json
 x-api-key: {{api_key}}
 x-client-id: {{client_id}}
 Authorization: Bearer {{token}}
+
+### Get list search product
+GET {{url_dev}}/product/search/test
+Content-Type: application/json
+x-api-key: {{api_key}}

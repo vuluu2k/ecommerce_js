@@ -11,7 +11,7 @@ router.use(permission("0000"));
 
 const prefix = "/v1/api";
 
-router.use(`${prefix}`, require("./access"));
 router.use(`${prefix}/product`, require("./product"));
+router.use(`${prefix}`, require("./access"));
 
 module.exports = router;

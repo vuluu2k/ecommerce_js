@@ -111,7 +111,7 @@ const authenticationV2 = async (req, res, next) => {
 
       return next();
     } catch (error) {
-      throw error;
+      next(error);
     }
   }
 
@@ -131,7 +131,7 @@ const authenticationV2 = async (req, res, next) => {
 
     return next();
   } catch (error) {
-    throw error;
+    next(error);
   }
 };
 
