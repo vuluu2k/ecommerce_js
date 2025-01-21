@@ -1,5 +1,6 @@
 "use strict";
 
+const { rearg } = require("lodash");
 const { OK } = require("../core/success.response");
 const ProductFactory = require("../services/product.service.xxx");
 
@@ -68,6 +69,31 @@ class ProductController {
     new OK({
       message: "Get list search successfully",
       metadata: await ProductFactory.searchProductByUser(req.params),
+    }).send(res);
+  };
+
+  findAllProduct = async (req, res, next) => {
+    new OK({
+      message: "Get all product successfully",
+      metadata: await ProductFactory.findAllProduct(req.query),
+    }).send(res);
+  };
+
+  findProduct = async (req, res, next) => {
+    new OK({
+      message: "Get product by id successfully",
+      metadata: await ProductFactory.findProduct(req.params),
+    }).send(res);
+  };
+
+  updateProductById = async (req, res, next) => {
+    new OK({
+      message: "Update product by id successfully",
+      metadata: await ProductFactory.updateProduct(req.body.product_type, {
+        ...req.body,
+        product_id: req.params.product_id,
+        product_shop: req.user.userId,
+      }),
     }).send(res);
   };
 }

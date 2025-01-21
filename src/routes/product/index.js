@@ -8,6 +8,8 @@ router.get(
   "/search/:term",
   asyncHandler(productController.getListSearchProduct)
 );
+router.get("/all", asyncHandler(productController.findAllProduct));
+router.get("/:product_id", asyncHandler(productController.findProduct));
 
 router.use(authentication);
 router.post("", asyncHandler(productController.createProduct));
@@ -18,6 +20,11 @@ router.post(
 router.post(
   "/unpublish/:product_id",
   asyncHandler(productController.unPublishProductByShop)
+);
+
+router.patch(
+  "/update/:product_id",
+  asyncHandler(productController.updateProductById)
 );
 
 router.get("/drafts/all", asyncHandler(productController.getAllDraftsForShop));

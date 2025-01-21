@@ -1,6 +1,6 @@
 "use strict";
 
-const { getSelectData } = require("../../utils");
+const { getSelectData, unGetSelectData } = require("../../utils");
 const {
   product,
   electronic,
@@ -77,6 +77,20 @@ const searchProductByUser = ({ term }) => {
   return results;
 };
 
+const findProduct = async ({ product_id, unselect }) => {
+  return await product
+    .findById(new Types.ObjectId(product_id))
+    .select(unGetSelectData(unselect))
+    .lean()
+    .exec();
+};
+
+const updateProductById = async ({ product_id, model, isNew = true }) => {
+  return await model
+    .findByIdAndUpdate(product_id, payload, { new: isNew })
+    .exec();
+};
+
 const findAllProduct = async ({ limit, sort, page, filter, select }) => {
   const skip = (page - 1) * limit;
   const sortBy = sort === "ctime" ? { createdAt: -1 } : { updatedAt: -1 };
@@ -102,4 +116,6 @@ module.exports = {
   unPushProductByShop,
   searchProductByUser,
   findAllProduct,
+  findProduct,
+  updateProductById,
 };
