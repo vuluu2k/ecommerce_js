@@ -1,34 +1,25 @@
 require("dotenv").config();
 const express = require("express");
-const morgan = require("morgan");
-const helmet = require("helmet");
-const compression = require("compression");
-// const { checkOverloadConnect } = require("./helpers/check.connect");
+const morgan = require("morgan"); // HTTP request logger
+const helmet = require("helmet"); // Security middleware
+const compression = require("compression"); // Response compression
 
 const app = express();
 
-// init middleware
-app.use(morgan("dev"));
-app.use(helmet());
-app.use(compression());
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
+// Initialize middleware stack
+app.use(morgan("dev")); // Log HTTP requests in development format
+app.use(helmet()); // Add security headers
+app.use(compression()); // Compress response bodies
+app.use(express.json()); // Parse JSON request bodies
+app.use(express.urlencoded({ extended: true })); // Parse URL-encoded bodies
 
-// init database
+// Initialize MongoDB database connection
 require("./dbs/init.mongodb");
-// checkOverloadConnect();
 
-// init router
+// Mount API routes
 app.use("", require("./routes"));
 
-// handling error
-// app.use((req, res, next) => {
-//   const error = new Error("Not Found");
-//   error.status = 404;
-
-//   next(error);
-// });
-
+// Global error handler middleware
 app.use((error, req, res, next) => {
   console.log("[ERROR]::", error);
   const statusCode = error.status || 500;
