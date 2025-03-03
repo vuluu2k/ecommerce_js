@@ -8,7 +8,8 @@ const {
 } = require("../configs/config.mongodb");
 
 // Construct MongoDB connection string
-const connectString = `mongodb://${host}:${port}/${name}`;
+const connectString =
+  process.env.MONGODB_URI || `mongodb://${host}:${port}/${name}`;
 
 // Check if running in development environment
 const isDev = process.env.NODE_ENV === "development";
@@ -32,7 +33,7 @@ class Database {
 
     // Attempt to connect to MongoDB
     mongoose
-      .connect(connectString)
+      .connect(connectString, { dbName: name })
       .then(() => {
         countConnect(); // Track active connections
         console.log("MongoDB connected");

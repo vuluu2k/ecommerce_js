@@ -21,12 +21,11 @@ docker-build:
 
 # Run with Docker
 docker-run: docker-build
-	docker-compose up
+	docker compose up
 
 # Stop Docker containers
 docker-stop:
-	docker-compose down
-
+	docker compose down
 # Clean up
 clean:
 	rm -rf node_modules
