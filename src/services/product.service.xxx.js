@@ -18,6 +18,7 @@ const {
   findProduct,
   updateProductById,
 } = require("../models/repositories/product.repo");
+const { updateNestedObject } = require("../utils");
 
 class ProductFactory {
   static productRegistry = {};
@@ -138,7 +139,7 @@ class Clothing extends Product {
       await updateProductById({
         product_id,
         model: clothing,
-        payload: objectParams.product_attributes,
+        payload: updateNestedObject(objectParams.product_attributes),
       });
     }
 
