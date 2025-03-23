@@ -108,6 +108,16 @@ const findAllProduct = async ({ limit, sort, page, filter, select }) => {
   return products;
 };
 
+const getProductById = async (product_id) => {
+  return await product
+    .findOne({
+      _id: new Types.ObjectId(product_id),
+      is_published: true,
+    })
+    .lean()
+    .exec();
+};
+
 module.exports = {
   findAllDraftsForShop,
   publishProductByShop,
@@ -118,4 +128,5 @@ module.exports = {
   findAllProduct,
   findProduct,
   updateProductById,
+  getProductById,
 };
