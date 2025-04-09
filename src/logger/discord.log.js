@@ -1,4 +1,5 @@
 "use strict";
+require("dotenv").config();
 
 const { Client, GatewayIntentBits } = require("discord.js");
 
@@ -27,6 +28,5 @@ client.on("messageCreate", (message) => {
   }
 });
 
-const token =
-  "MTM1ODc0MDMxOTYwODM3NzM4NA.GW3FaS.8ZXhIbGmpTmSupkQpOrHnbOz5mOauilBc-WNo0";
+const token = process.env.DISCORD_BOT_TOKEN;
 client.login(token);
