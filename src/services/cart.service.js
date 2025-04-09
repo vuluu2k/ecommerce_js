@@ -110,8 +110,8 @@ class CartService {
   static async getListUserCart({ userId }) {
     return await cart
       .findOne({
-        cart_userId: userId,
-        cart_state: "active",
+        cart_userId: +userId,
+        cart_state: "a ctive",
       })
       .lean()
       .exec();
